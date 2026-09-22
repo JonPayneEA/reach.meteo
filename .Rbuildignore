@@ -1,0 +1,5 @@
+^\.github$
+^README\.Rmd$
+^reach\.meteo\.Rproj$
+^\.gitignore$
+^\.Rproj\.user$

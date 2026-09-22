@@ -1,0 +1,27 @@
+Package: reach.meteo
+Title: Dispatch-First Access to Met Office Forecast Data
+Version: 0.4.0
+Authors@R: person("Jonathan", "Payne", role = c("aut", "cre"), email = "jon.payne@environment-agency.gov.uk")
+Description: Discovers, filters, downloads and analyses Met Office forecast data from public object storage. Includes MOGREPS-UK internal-realisation reading, six-cycle time-lagged ensemble composition, point extraction, precipitation accumulation and ggplot2 visualisation.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Depends: R (>= 4.3.0)
+Imports:
+    data.table,
+    ggplot2,
+    hdf5r,
+    httr2,
+    scales,
+    stringr,
+    terra,
+    xml2
+Suggests:
+    covr,
+    knitr,
+    lintr,
+    rmarkdown,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+VignetteBuilder: knitr
