@@ -14,7 +14,6 @@ Imports:
     hdf5r,
     httr2,
     scales,
-    stringr,
     terra,
     xml2
 Suggests:

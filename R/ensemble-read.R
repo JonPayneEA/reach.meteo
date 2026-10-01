@@ -4,7 +4,7 @@
 # Flode Module: reach.io / reach.ensemble / reach.viz
 # Author: Jonathan Payne, jon.payne@environment-agency.gov.uk
 # Created: 2026-09-22
-# Modified: 2026-09-22 - JP: Initial GitHub-ready implementation
+# Modified: 2026-10-01 - JP: added .str_match() to replace stringr
 # Tier: 2
 # Inputs: A local NetCDF path.
 # Outputs: A reach_meteo_ensemble_file object.
@@ -26,12 +26,23 @@
   as.integer(as.vector(handle[[name]]$read()))
 }
 
+# Base R replacement for stringr::str_match(): one row per element of `x`, the
+# whole match in column 1 and each capture group after it, NA where no match.
+.str_match <- function(x, pattern) {
+  n_groups <- lengths(regmatches(pattern, gregexpr("(?<!\\\\)\\((?!\\?)", pattern, perl = TRUE)))
+  out      <- matrix(NA_character_, nrow = length(x), ncol = n_groups + 1L)
+  hits     <- regmatches(x, regexec(pattern, x, perl = TRUE))
+  matched  <- lengths(hits) > 0L
+  if (any(matched)) out[matched, ] <- do.call(rbind, hits[matched])
+  out
+}
+
 .parse_file_identity <- function(file) {
   path <- normalizePath(file, winslash = "/", mustWork = TRUE)
   filename <- basename(path)
   valid_text <- sub("^([0-9]{8}T[0-9]{4}Z).*$", "\\1", filename)
-  lead <- stringr::str_match(filename, "PT([0-9]{4})H([0-9]{2})M")
-  dispatch <- stringr::str_match(path, "uk-ensemble/([0-9]{4})/([0-9]{2})/([0-9]{2})/T([0-9]{4})Z/")
+  lead <- .str_match(filename, "PT([0-9]{4})H([0-9]{2})M")
+  dispatch <- .str_match(path, "uk-ensemble/([0-9]{4})/([0-9]{2})/([0-9]{2})/T([0-9]{4})Z/")
   list(
     source_file = path,
     valid_time = as.POSIXct(valid_text, format = "%Y%m%dT%H%MZ", tz = "UTC"),

@@ -4,11 +4,11 @@
 # Flode Module: reach.io / reach.ensemble / reach.viz
 # Author: Jonathan Payne, jon.payne@environment-agency.gov.uk
 # Created: 2026-09-22
-# Modified: 2026-09-22 - JP: Initial GitHub-ready implementation
+# Modified: 2026-10-01 - JP: replaced stringr with base regmatches()
 # Tier: 2
 # Inputs: Selected dispatches, variables and lead-time limits.
 # Outputs: Request and catalogue objects.
-# Dependencies: data.table; stringr.
+# Dependencies: data.table.
 # ============================================================
 
 
@@ -69,7 +69,7 @@ catalogue <- function(x, quiet = FALSE) {
   if (!nrow(records_dt)) stop("No objects matched the requested variables.", call. = FALSE)
 
   valid_text <- sub("^([0-9]{8}T[0-9]{4}Z).*$", "\\1", records_dt[["filename"]])
-  lead_match <- stringr::str_match(records_dt[["filename"]], "PT([0-9]{4})H([0-9]{2})M")
+  lead_match <- .str_match(records_dt[["filename"]], "PT([0-9]{4})H([0-9]{2})M")
   data.table::set(records_dt, j = "valid_time", value = as.POSIXct(valid_text, format = "%Y%m%dT%H%MZ", tz = "UTC"))
   data.table::set(
     records_dt,
